@@ -9,6 +9,7 @@
   --gray: #dbe1e8;
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+  --whatsapp-color: #25d366;
 }
 
 * {
@@ -80,6 +81,13 @@ img {
   color: var(--primary-color);
 }
 
+.section-header p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  max-width: 700px;
+  margin: 15px auto 0;
+}
+
 .underline {
   height: 4px;
   width: 70px;
@@ -143,13 +151,29 @@ nav {
 /* Hero Section */
 .hero {
   padding: 150px 0 100px;
-  background-color: var(--secondary-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  z-index: -1;
 }
 
 .hero .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-content {
@@ -173,6 +197,71 @@ nav {
   font-size: 1.1rem;
   margin-bottom: 30px;
   color: var(--text-light);
+}
+
+/* Carousel Section */
+.carousel-section {
+  padding: 100px 0;
+  background-color: var(--secondary-color);
+}
+
+.carousel-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.carousel {
+  display: flex;
+  width: 100%;
+  height: 400px;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-item.active {
+  opacity: 1;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.indicator.active {
+  background-color: var(--white);
 }
 
 /* About Section */
@@ -199,10 +288,10 @@ nav {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
+  width: 100%;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: var(--shadow);
-  width: 100%;
 }
 
 .video-container iframe {
@@ -256,16 +345,86 @@ nav {
   color: var(--text-light);
 }
 
+/* Talkiy Kids Section */
+.schools {
+  padding: 100px 0;
+  background-color: var(--white);
+}
+
+.talkiy-kids {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+}
+
+.talkiy-kids-logo {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.talkiy-kids-logo img {
+  max-width: 250px;
+  transition: transform 0.3s ease;
+}
+
+.talkiy-kids-logo img:hover {
+  transform: scale(1.05);
+}
+
+.talkiy-kids-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.kids-feature {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.kids-feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.kids-feature-icon {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-right: 15px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.kids-feature p {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.talkiy-kids-cta {
+  margin-top: 20px;
+}
+
 /* Contact Section */
 .contact {
   padding: 100px 0;
-  background-color: var(--white);
+  background-color: var(--gray-light);
 }
 
 .contact-form {
   max-width: 600px;
   margin: 0 auto;
-  background-color: var(--secondary-color);
+  background-color: var(--white);
   padding: 40px;
   border-radius: 10px;
   box-shadow: var(--shadow);
@@ -328,7 +487,37 @@ footer {
 
 .footer-logo img {
   height: 50px;
-  filter: brightness(0) invert(1);
+  filter: brightness(1.2);
+}
+
+/* WhatsApp Float Button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background-color: var(--whatsapp-color);
+  color: var(--white);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  color: var(--white);
+}
+
+.whatsapp-float i {
+  margin-top: 2px;
 }
 
 /* Responsive Design */
@@ -398,6 +587,10 @@ footer {
   .footer-logo {
     margin-bottom: 20px;
   }
+
+  .talkiy-kids {
+    padding: 30px 20px;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -411,5 +604,13 @@ footer {
 
   .contact-form {
     padding: 30px 20px;
+  }
+
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+    bottom: 20px;
+    left: 20px;
   }
 }

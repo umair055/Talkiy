@@ -30,52 +30,114 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
 
-    // Form submission
+    // Carousel functionality
+    const carouselItems = document.querySelectorAll(".carousel-item")
+    const indicators = document.querySelectorAll(".indicator")
+    let currentIndex = 0
+    const intervalTime = 5000 // 5 seconds
+
+    function showSlide(index) {
+        // Hide all slides
+        carouselItems.forEach((item) => {
+            item.classList.remove("active")
+        })
+
+        // Deactivate all indicators
+        indicators.forEach((dot) => {
+            dot.classList.remove("active")
+        })
+
+        // Show the selected slide and activate its indicator
+        carouselItems[index].classList.add("active")
+        indicators[index].classList.add("active")
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % carouselItems.length
+        showSlide(currentIndex)
+    }
+
+    // Set up automatic slide transition
+    let slideInterval = setInterval(nextSlide, intervalTime)
+
+    // Add click event to indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener("click", () => {
+            clearInterval(slideInterval)
+            currentIndex = index
+            showSlide(currentIndex)
+            slideInterval = setInterval(nextSlide, intervalTime)
+        })
+    })
+
+    // Pause carousel on hover
+    const carouselContainer = document.querySelector(".carousel-container")
+    carouselContainer.addEventListener("mouseenter", () => {
+        clearInterval(slideInterval)
+    })
+
+    carouselContainer.addEventListener("mouseleave", () => {
+        slideInterval = setInterval(nextSlide, intervalTime)
+    })
+
+    // Initialize the carousel
+    showSlide(currentIndex)
+
+        // Form submission with EmailJS
+        // Load EmailJS SDK
+        ; (() => {
+            if (typeof emailjs !== "undefined") {
+                emailjs.init("YOUR_EMAILJS_PUBLIC_KEY")
+            }
+        })()
+
     const contactForm = document.getElementById("contactForm")
     const formStatus = document.getElementById("formStatus")
 
-    contactForm.addEventListener("submit", (e) => {
-        e.preventDefault()
+    if (contactForm) {
+        contactForm.addEventListener("submit", (e) => {
+            e.preventDefault()
 
-        // Get form data
-        const institutionName = document.getElementById("institutionName").value
-        const fullName = document.getElementById("fullName").value
-        const phone = document.getElementById("phone").value
+            // Get form data
+            const institutionName = document.getElementById("institutionName").value
+            const fullName = document.getElementById("fullName").value
+            const phone = document.getElementById("phone").value
 
-        // Prepare data for Google Sheets
-        const formData = new FormData()
-        formData.append("institutionName", institutionName)
-        formData.append("fullName", fullName)
-        formData.append("phone", phone)
+            // Show loading message
+            formStatus.innerHTML = "Gönderiliyor..."
+            formStatus.className = "form-status"
 
-        // Replace with your Google Sheet script URL
-        const scriptURL = "YOUR_GOOGLE_SHEET_SCRIPT_URL"
-
-        // Show loading message
-        formStatus.innerHTML = "Gönderiliyor..."
-        formStatus.className = "form-status"
-
-        // Send data to Google Sheets
-        fetch(scriptURL, {
-            method: "POST",
-            body: formData,
-        })
-            .then((response) => {
-                if (response.ok) {
-                    // Success message
-                    formStatus.innerHTML = "Formunuz başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz."
-                    formStatus.className = "form-status success"
-                    contactForm.reset()
-                } else {
-                    // Error message
-                    throw new Error("Form gönderilirken bir hata oluştu.")
+            if (typeof emailjs !== "undefined") {
+                // Prepare template parameters
+                const templateParams = {
+                    institutionName: institutionName,
+                    fullName: fullName,
+                    phone: phone,
                 }
-            })
-            .catch((error) => {
-                formStatus.innerHTML = error.message
-                formStatus.className = "form-status error"
-            })
-    })
+
+                // Send email using EmailJS
+                emailjs.send("YOUR_EMAILJS_SERVICE_ID", "YOUR_EMAILJS_TEMPLATE_ID", templateParams).then(
+                    (response) => {
+                        // Success message
+                        formStatus.innerHTML = "Formunuz başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz."
+                        formStatus.className = "form-status success"
+                        contactForm.reset()
+                    },
+                    (error) => {
+                        // Error message
+                        formStatus.innerHTML = "Form gönderilirken bir hata oluştu."
+                        formStatus.className = "form-status error"
+                        console.error("EmailJS Error:", error)
+                    },
+                )
+            } else {
+                // Fallback if EmailJS is not loaded
+                formStatus.innerHTML = "Form gönderildi (test modu)."
+                formStatus.className = "form-status success"
+                contactForm.reset()
+            }
+        })
+    }
 
     // Scroll animations
     const observerOptions = {
